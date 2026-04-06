@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Custom list view for model explorer -->
+    <record id="view_ir_model_list_studio" model="ir.ui.view">
+        <field name="name">ir.model.list.studio_lite</field>
+        <field name="model">ir.model</field>
+        <field name="arch" type="xml">
+            <list string="Models" create="0" edit="0" delete="0">
+                <field name="name" string="Model"/>
+                <field name="model" string="Technical Name"/>
+                <field name="count" string="Records"/>
+                <field name="state" string="Origin"
+                       widget="badge"
+                       decoration-info="state == 'base'"
+                       decoration-success="state == 'manual'"/>
+                <field name="modules" string="Module(s)" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Custom form view (read-only info + launch buttons) -->
+    <record id="view_ir_model_form_studio" model="ir.ui.view">
+        <field name="name">ir.model.form.studio_lite</field>
+        <field name="model">ir.model</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form string="Model Details" create="0" edit="0" delete="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted"><field name="model" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="count" string="Records"/>
+                            <field name="state" string="Origin"/>
+                            <field name="modules"/>
+                        </group>
+                        <group string="Quick Actions">
+                            <button name="%(action_studio_field_creator)d"
+                                    type="action" string="Create Field"
+                                    class="btn-primary oe_link" icon="fa-plus"/>
+                            <button name="%(action_studio_field_visibility)d"
+                                    type="action" string="Hide Fields"
+                                    class="oe_link" icon="fa-eye-slash"/>
+                            <button name="%(action_studio_field_inserter)d"
+                                    type="action" string="Insert Field"
+                                    class="oe_link" icon="fa-puzzle-piece"/>
+                            <button name="%(action_studio_field_properties)d"
+                                    type="action" string="Field Properties"
+                                    class="oe_link" icon="fa-cog"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fields">
+                            <field name="field_id" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="field_description" string="Label"/>
+                                    <field name="ttype" string="Type"/>
+                                    <field name="required"/>
+                                    <field name="store"/>
+                                    <field name="state" string="Origin"
+                                           widget="badge"
+                                           decoration-info="state == 'base'"
+                                           decoration-success="state == 'manual'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_ir_model_search_studio" model="ir.ui.view">
+        <field name="name">ir.model.search.studio_lite</field>
+        <field name="model">ir.model</field>
+        <field name="arch" type="xml">
+            <search string="Search Models">
+                <field name="name"/>
+                <field name="model"/>
+                <field name="modules"/>
+                <filter string="Not Transient" name="not_transient"
+                        domain="[('transient', '=', False)]"/>
+                <filter string="Has Custom Fields" name="custom_fields"
+                        domain="[('field_id.state', '=', 'manual')]"/>
+                <separator/>
+                <group>
+                    <filter string="Module" name="group_module"
+                            domain="[]" context="{'group_by': 'modules'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_studio_model_explorer" model="ir.actions.act_window">
+        <field name="name">Model Explorer</field>
+        <field name="res_model">ir.model</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('transient', '=', False)]</field>
+        <field name="context">{'search_default_not_transient': 1}</field>
+        <field name="search_view_id" ref="view_ir_model_search_studio"/>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'list', 'view_id': ref('view_ir_model_list_studio')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('view_ir_model_form_studio')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Browse all installed models
+            </p>
+            <p>
+                Click on a model to see its fields and launch Studio Lite
+                customization wizards.
+            </p>
+        </field>
+    </record>
+
+</odoo>

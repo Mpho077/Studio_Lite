@@ -1,0 +1,259 @@
+/* Studio Lite — Design Panel Styles */
+
+.studio-lite-systray-btn {
+    color: #7c7bad;
+    font-size: 1.15em;
+    transition: color 0.15s, transform 0.15s;
+}
+.studio-lite-systray-btn:hover {
+    color: #714b67;
+    transform: scale(1.15);
+}
+
+/* Design panel */
+.studio-design-panel {
+    position: relative;
+    min-height: 350px;
+}
+
+.studio-dp-header .badge {
+    font-weight: 500;
+}
+
+/* Field list */
+.studio-field-list {
+    max-height: 55vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.studio-field-item {
+    transition: background-color 0.15s, box-shadow 0.15s;
+    background: #fff;
+}
+.studio-field-item:hover {
+    background-color: #f0f0ff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Drag styles */
+.studio-field-item[draggable="true"] {
+    cursor: grab;
+}
+.studio-field-item.studio-dragging {
+    opacity: 0.4;
+    border-style: dashed !important;
+}
+.studio-field-item.studio-drag-over {
+    border-color: #714b67 !important;
+    background-color: #f5eef4 !important;
+}
+
+.studio-drag-handle {
+    cursor: grab !important;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+}
+.studio-field-item:hover .studio-drag-handle {
+    opacity: 1;
+}
+
+/* Saving overlay */
+.studio-saving-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 4px;
+}
+
+/* Create form */
+.studio-create-form {
+    padding: 8px 0;
+}
+
+/* Tabs active state */
+.studio-design-panel .nav-tabs .nav-link.active {
+    color: #714b67;
+    border-bottom-color: #714b67;
+    font-weight: 600;
+}
+
+/* ================================================================
+   Layout Tab — Tree view
+   ================================================================ */
+
+.studio-layout-tab {
+    max-height: 55vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.studio-layout-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    font-size: 0.875rem;
+    min-height: 34px;
+}
+
+/* Section / Group header */
+.studio-layout-group {
+    background: #f4f0ff;
+    border-left: 3px solid #714b67;
+    font-weight: 600;
+}
+
+/* Column header */
+.studio-layout-column {
+    background: #f0f6ff;
+    border-left: 3px solid #4b7fe0;
+}
+
+/* Notebook header */
+.studio-layout-notebook {
+    background: #edf7ed;
+    border-left: 3px solid #28a745;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+/* Page / Tab header */
+.studio-layout-page {
+    background: #fffbf0;
+    border-left: 3px solid #f0a500;
+    font-weight: 600;
+}
+
+/* Field row */
+.studio-layout-field {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    transition: background-color 0.1s;
+}
+.studio-layout-field:hover {
+    background: #fafafa;
+}
+.studio-layout-field .btn-xs {
+    font-size: 0.7rem;
+    padding: 0 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.studio-layout-field:hover .btn-xs {
+    opacity: 1;
+}
+
+/* Add field button row */
+.studio-layout-add-btn {
+    flex-direction: column;
+    align-items: flex-start;
+    background: transparent;
+}
+.studio-layout-add-btn .btn {
+    font-size: 0.78rem;
+    padding: 2px 8px;
+}
+
+/* Action button row (Add Section / Add Tab) */
+.studio-layout-action-btn {
+    background: transparent;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+.studio-layout-action-btn .btn {
+    font-size: 0.78rem;
+    padding: 2px 10px;
+}
+
+/* Inline field picker */
+.studio-inline-picker {
+    width: 100%;
+    border: 1px solid #c0c0e0;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    padding: 8px;
+}
+
+.picker-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.picker-item {
+    cursor: pointer;
+    font-size: 0.82rem;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.1s;
+}
+.picker-item:last-child {
+    border-bottom: none;
+}
+.picker-item:hover {
+    background: #f0eeff;
+}
+
+/* btn-xs utility */
+.btn-xs {
+    font-size: 0.7rem !important;
+    padding: 1px 5px !important;
+    line-height: 1.4;
+}
+
+/* ================================================================
+   Hover-reveal buttons on section / column / page rows
+   ================================================================ */
+.studio-layout-group .btn-xs,
+.studio-layout-column .btn-xs,
+.studio-layout-page .btn-xs {
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.studio-layout-group:hover .btn-xs,
+.studio-layout-column:hover .btn-xs,
+.studio-layout-page:hover .btn-xs {
+    opacity: 1;
+}
+
+/* ================================================================
+   Field properties inline expansion panel
+   ================================================================ */
+.studio-field-props-panel {
+    flex: 0 0 100%;
+    margin-top: 8px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #f2f6ff 100%);
+    border: 1px solid #ccd6f6;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    box-shadow: inset 0 1px 3px rgba(113, 75, 103, 0.06);
+}
+
+.studio-field-props-panel .form-label {
+    color: #444;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.studio-field-props-panel .form-text {
+    font-size: 0.73rem;
+    color: #888;
+}
+
+.studio-layout-field.studio-props-open {
+    border-color: #9ca3d4 !important;
+    background: #f8f9ff !important;
+}

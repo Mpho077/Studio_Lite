@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- Root menu (top-level app)                                          -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_studio_lite_root"
+              name="Studio Lite"
+              sequence="999"/>
+
+    <!-- ================================================================== -->
+    <!-- Overview  (default landing page)                                   -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_studio_overview"
+              name="Overview"
+              parent="menu_studio_lite_root"
+              action="action_studio_customization"
+              sequence="10"/>
+
+    <!-- ================================================================== -->
+    <!-- Customize sub-menu                                                 -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_studio_customize"
+              name="Customize"
+              parent="menu_studio_lite_root"
+              sequence="20"/>
+
+    <menuitem id="menu_studio_create_field"
+              name="Create Field"
+              parent="menu_studio_customize"
+              action="action_studio_field_creator"
+              sequence="10"/>
+
+    <menuitem id="menu_studio_hide_fields"
+              name="Hide Fields"
+              parent="menu_studio_customize"
+              action="action_studio_field_visibility"
+              sequence="20"/>
+
+    <menuitem id="menu_studio_insert_field"
+              name="Insert Field in View"
+              parent="menu_studio_customize"
+              action="action_studio_field_inserter"
+              sequence="30"/>
+
+    <menuitem id="menu_studio_field_properties"
+              name="Field Properties"
+              parent="menu_studio_customize"
+              action="action_studio_field_properties"
+              sequence="40"/>
+
+    <!-- ================================================================== -->
+    <!-- Model Explorer                                                     -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_studio_model_explorer"
+              name="Model Explorer"
+              parent="menu_studio_lite_root"
+              action="action_studio_model_explorer"
+              sequence="30"/>
+
+    <!-- ================================================================== -->
+    <!-- Export                                                              -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_studio_export"
+              name="Export as Module"
+              parent="menu_studio_lite_root"
+              action="action_studio_export"
+              sequence="40"
+              groups="group_studio_manager"/>
+
+</odoo>

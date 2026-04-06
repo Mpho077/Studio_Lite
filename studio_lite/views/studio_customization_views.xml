@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- List view                                                          -->
+    <!-- ================================================================== -->
+    <record id="view_studio_customization_list" model="ir.ui.view">
+        <field name="name">studio.customization.list</field>
+        <field name="model">studio.customization</field>
+        <field name="arch" type="xml">
+            <list string="Customizations" decoration-muted="state == 'reverted'">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="customization_type" widget="badge"
+                       decoration-info="customization_type == 'field_create'"
+                       decoration-warning="customization_type == 'field_hide'"
+                       decoration-success="customization_type == 'field_insert'"
+                       decoration-primary="customization_type == 'field_property'"/>
+                <field name="field_id" optional="show"/>
+                <field name="target_view_id" optional="hide"/>
+                <field name="user_id" widget="many2one_avatar"/>
+                <field name="create_date" string="Date"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'reverted'"/>
+                <button name="action_revert" type="object" string="Revert"
+                        icon="fa-undo" class="text-danger"
+                        invisible="state != 'active'"
+                        confirm="This will undo this customization. Continue?"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- Form view                                                          -->
+    <!-- ================================================================== -->
+    <record id="view_studio_customization_form" model="ir.ui.view">
+        <field name="name">studio.customization.form</field>
+        <field name="model">studio.customization</field>
+        <field name="arch" type="xml">
+            <form string="Customization">
+                <header>
+                    <button name="action_revert" type="object"
+                            string="Revert Customization"
+                            class="btn-danger"
+                            invisible="state != 'active'"
+                            confirm="This will undo this customization. Continue?"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Details">
+                            <field name="model_id"/>
+                            <field name="model_name"/>
+                            <field name="customization_type"/>
+                            <field name="field_id"/>
+                        </group>
+                        <group string="Metadata">
+                            <field name="user_id"/>
+                            <field name="create_date" string="Applied On"/>
+                            <field name="target_view_id"/>
+                            <field name="view_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Technical Data">
+                            <field name="technical_data" widget="ace"
+                                   options="{'mode': 'json'}" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- Search view                                                        -->
+    <!-- ================================================================== -->
+    <record id="view_studio_customization_search" model="ir.ui.view">
+        <field name="name">studio.customization.search</field>
+        <field name="model">studio.customization</field>
+        <field name="arch" type="xml">
+            <search string="Search Customizations">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="model_name"/>
+                <filter string="Active" name="active"
+                        domain="[('state', '=', 'active')]"/>
+                <filter string="Reverted" name="reverted"
+                        domain="[('state', '=', 'reverted')]"/>
+                <separator/>
+                <filter string="Fields Created" name="type_field"
+                        domain="[('customization_type', '=', 'field_create')]"/>
+                <filter string="Fields Hidden" name="type_hide"
+                        domain="[('customization_type', '=', 'field_hide')]"/>
+                <filter string="Fields Inserted" name="type_insert"
+                        domain="[('customization_type', '=', 'field_insert')]"/>
+                <filter string="Properties Changed" name="type_prop"
+                        domain="[('customization_type', '=', 'field_property')]"/>
+                <separator/>
+                <group>
+                    <filter string="Model" name="group_model"
+                            domain="[]" context="{'group_by': 'model_id'}"/>
+                    <filter string="Type" name="group_type"
+                            domain="[]" context="{'group_by': 'customization_type'}"/>
+                    <filter string="Status" name="group_state"
+                            domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="User" name="group_user"
+                            domain="[]" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- Action                                                             -->
+    <!-- ================================================================== -->
+    <record id="action_studio_customization" model="ir.actions.act_window">
+        <field name="name">Customization Log</field>
+        <field name="res_model">studio.customization</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_studio_customization_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No customizations yet!
+            </p>
+            <p>
+                Use the <b>Customize</b> menu to create fields, hide fields,
+                insert fields into views, or change field properties.
+                Every change is logged here and can be reverted with one click.
+            </p>
+        </field>
+    </record>
+
+</odoo>

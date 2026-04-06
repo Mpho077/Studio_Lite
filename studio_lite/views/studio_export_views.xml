@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_studio_export_form" model="ir.ui.view">
+        <field name="name">studio.export.form</field>
+        <field name="model">studio.export</field>
+        <field name="arch" type="xml">
+            <form string="Export Customizations as Module">
+                <field name="state" invisible="1"/>
+                <sheet>
+                    <!-- Step 1: Choose -->
+                    <group invisible="state != 'choose'">
+                        <div class="oe_title mb-3">
+                            <h2>Export customizations as an Odoo module</h2>
+                            <p class="text-muted">
+                                The generated ZIP contains a proper Odoo module with
+                                Python field definitions and XML view overrides.
+                                Install it on any Odoo 19 instance to apply the same
+                                customizations.
+                            </p>
+                        </div>
+                        <group string="Module">
+                            <field name="module_name"/>
+                            <field name="module_description"/>
+                        </group>
+                        <group string="Scope">
+                            <field name="model_ids" widget="many2many_tags"
+                                   placeholder="All customized models"/>
+                        </group>
+                        <group string="Include">
+                            <field name="export_fields"/>
+                            <field name="export_views"/>
+                        </group>
+                    </group>
+
+                    <!-- Step 2: Download -->
+                    <group invisible="state != 'done'">
+                        <div class="alert alert-success" role="alert">
+                            <strong>Export complete!</strong>
+                            Click below to download your module.
+                        </div>
+                        <field name="export_file" filename="export_filename"/>
+                        <field name="export_filename" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_export" type="object"
+                            string="Generate Module" class="btn-primary"
+                            invisible="state != 'choose'"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_export" model="ir.actions.act_window">
+        <field name="name">Export as Module</field>
+        <field name="res_model">studio.export</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

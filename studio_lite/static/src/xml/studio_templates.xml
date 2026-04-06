@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- ================================================================== -->
+    <!-- Systray Button                                                     -->
+    <!-- ================================================================== -->
+    <t t-name="studio_lite.Systray">
+        <button class="btn border-0 studio-lite-systray-btn"
+                title="Studio Lite — Customize this view"
+                t-on-click="onClick">
+            <i class="fa fa-paint-brush"/>
+        </button>
+    </t>
+
+    <!-- ================================================================== -->
+    <!-- Design Panel Dialog                                                -->
+    <!-- ================================================================== -->
+    <t t-name="studio_lite.DesignPanel">
+        <Dialog title="'Studio Lite — ' + props.resModel" size="'xl'">
+            <div class="studio-design-panel">
+
+                <!-- Header bar -->
+                <div class="studio-dp-header d-flex align-items-center gap-2 mb-3">
+                    <span class="badge bg-primary fs-6">
+                        <i class="fa fa-paint-brush me-1"/>
+                        <t t-esc="props.resModel"/>
+                    </span>
+                    <span class="badge bg-secondary" t-if="state.viewId">
+                        <i class="fa fa-eye me-1"/>
+                        <t t-esc="state.viewName || (props.viewType + ' view')"/>
+                    </span>
+                    <button class="btn btn-sm btn-outline-warning"
+                            title="Undo the last Studio Lite change on this model"
+                            t-att-disabled="state.saving"
+                            t-on-click="undoLast">
+                        <i class="fa fa-undo me-1"/>Undo
+                    </button>
+                    <div class="ms-auto">
+                        <div class="input-group input-group-sm" style="width: 250px;">
+                            <span class="input-group-text"><i class="fa fa-search"/></span>
+                            <input type="text" class="form-control"
+                                   placeholder="Search fields…"
+                                   t-model="state.searchQuery"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div t-if="state.loading" class="text-center py-5">
+                    <i class="fa fa-spinner fa-spin fa-2x text-primary"/>
+                    <p class="mt-2 text-muted">Loading view fields…</p>
+                </div>
+
+                <!-- Tabs -->
+                <ul t-if="!state.loading" class="nav nav-tabs mb-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"
+                           t-attf-class="nav-link #{state.tab === 'hidden' ? 'active' : ''}"
+                           t-on-click.prevent="() => this.setTab('hidden')">
+                            <i class="fa fa-eye-slash me-1"/>
+                            Hidden
+                            <span class="badge bg-warning ms-1"
+                                  t-esc="hiddenFields.length"/>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"
+                           t-attf-class="nav-link #{state.tab === 'available' ? 'active' : ''}"
+                           t-on-click.prevent="() => this.setTab('available')">
+                            <i class="fa fa-puzzle-piece me-1"/>
+                            Available Fields
+                            <span class="badge bg-info ms-1"
+                                  t-esc="availableFields.length"/>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"
+                           t-attf-class="nav-link #{state.tab === 'layout' ? 'active' : ''}"
+                           t-on-click.prevent="() => this.setTab('layout')">
+                            <i class="fa fa-sitemap me-1"/>
+                            Layout
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"
+                           t-attf-class="nav-link #{state.tab === 'create' ? 'active' : ''}"
+                           t-on-click.prevent="() => this.setTab('create')">
+                            <i class="fa fa-plus me-1"/>
+                            Create Field
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- ============================================================ -->
+                <!-- Tab: Hidden Fields                                           -->
+                <!-- ============================================================ -->
+                <div t-if="!state.loading &amp;&amp; state.tab === 'hidden'"
+                     class="studio-field-list">
+
+                    <div t-if="hiddenFields.length === 0"
+                         class="text-muted text-center py-4">
+                        <i class="fa fa-eye fa-2x mb-2 d-block"/>
+                        No hidden fields.
+                    </div>
+
+                    <t t-foreach="hiddenFields" t-as="field" t-key="field.name">
+                        <div class="studio-field-item d-flex align-items-center gap-2 px-3 py-2 border rounded mb-1 opacity-50">
+                            <i t-attf-class="fa #{getFieldTypeIcon(field.type)} text-muted"
+                               style="width: 18px; text-align: center;"/>
+                            <div class="flex-grow-1">
+                                <strong t-esc="field.string || field.name"/>
+                                <small class="text-muted ms-2" t-esc="field.name"/>
+                                <span class="badge bg-light text-dark ms-1"
+                                      t-esc="field.type"/>
+                            </div>
+                            <button class="btn btn-sm btn-outline-success"
+                                    title="Show this field"
+                                    t-att-disabled="state.saving"
+                                    t-on-click="() => this.toggleFieldVisibility(field.name, false)">
+                                <i class="fa fa-eye me-1"/>Show
+                            </button>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- Tab: Available Fields (not in view)                          -->
+                <!-- ============================================================ -->
+                <div t-if="!state.loading &amp;&amp; state.tab === 'available'"
+                     class="studio-field-list">
+
+                    <p class="text-muted mb-2">
+                        <i class="fa fa-info-circle me-1"/>
+                        These fields exist on the model but are not in the current view.
+                        Click <strong>Add</strong> to insert them.
+                    </p>
+
+                    <div t-if="availableFields.length === 0"
+                         class="text-muted text-center py-4">
+                        All fields are already in the view!
+                    </div>
+
+                    <t t-foreach="availableFields" t-as="field" t-key="field.name">
+                        <div class="studio-field-item d-flex align-items-center gap-2 px-3 py-2 border rounded mb-1">
+                            <i t-attf-class="fa #{getFieldTypeIcon(field.type)} text-info"
+                               style="width: 18px; text-align: center;"/>
+                            <div class="flex-grow-1">
+                                <strong t-esc="field.string || field.name"/>
+                                <small class="text-muted ms-2" t-esc="field.name"/>
+                                <span class="badge bg-light text-dark ms-1"
+                                      t-esc="field.type"/>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary"
+                                    title="Add to view"
+                                    t-att-disabled="state.saving"
+                                    t-on-click="() => this.addFieldToView(field.name)">
+                                <i class="fa fa-plus me-1"/>Add
+                            </button>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- Tab: Layout Tree                                             -->
+                <!-- ============================================================ -->
+                <div t-if="!state.loading &amp;&amp; state.tab === 'layout'"
+                     class="studio-layout-tab">
+
+                    <p t-if="!state.layout || (state.layout.groups.length === 0 &amp;&amp; !state.layout.notebook)"
+                       class="text-muted text-center py-4">
+                        <i class="fa fa-info-circle d-block fa-2x mb-2"/>
+                        No layout information found for this view type.
+                    </p>
+
+                    <t t-foreach="layoutItems" t-as="item" t-key="item.id">
+
+                        <!-- Group / Section header -->
+                        <div t-if="item.kind === 'group_header'"
+                             class="studio-layout-item studio-layout-group"
+                             t-attf-style="padding-left: #{item.depth * 20}px">
+                            <i class="fa fa-th-large text-primary me-2"/>
+                            <!-- Rename mode -->
+                            <t t-if="state.renamingSectionXpath === item.xpath">
+                                <input type="text" class="form-control form-control-sm"
+                                       placeholder="Section title…"
+                                       style="max-width: 180px;"
+                                       t-model="state.renamingSectionTitle"
+                                       t-on-keydown="(ev) => ev.key === 'Enter' &amp;&amp; this.renameSection(item.xpath)"/>
+                                <button class="btn btn-xs btn-success ms-1"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="() => this.renameSection(item.xpath)">
+                                    <i class="fa fa-check"/>
+                                </button>
+                                <button class="btn btn-xs btn-outline-secondary ms-1"
+                                        t-on-click="() => { this.state.renamingSectionXpath = null; }">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </t>
+                            <!-- Normal mode -->
+                            <t t-if="state.renamingSectionXpath !== item.xpath">
+                                <strong t-esc="item.label"/>
+                                <span class="badge bg-secondary ms-2 small"
+                                      t-esc="item.fieldCount + ' field(s)'"/>
+                                <!-- Toolbar: rename + add column -->
+                                <div t-if="state.addingColumnFor !== item.xpath" class="ms-auto d-flex gap-1">
+                                    <button class="btn btn-xs btn-outline-secondary"
+                                            title="Rename section"
+                                            t-att-disabled="state.saving"
+                                            t-on-click="() => { this.state.renamingSectionXpath = item.xpath; this.state.renamingSectionTitle = item.label || ''; }">
+                                        <i class="fa fa-pencil"/>
+                                    </button>
+                                    <button class="btn btn-xs btn-outline-primary"
+                                            title="Add a column to this section"
+                                            t-att-disabled="state.saving"
+                                            t-on-click="() => { this.state.addingColumnFor = item.xpath; this.state.newColumnTitle = ''; }">
+                                        <i class="fa fa-plus me-1"/>Col
+                                    </button>
+                                </div>
+                                <!-- Add Column form -->
+                                <div t-if="state.addingColumnFor === item.xpath"
+                                     class="ms-auto d-flex align-items-center gap-1 flex-wrap mt-1">
+                                    <input type="text" class="form-control form-control-sm"
+                                           placeholder="Column title (optional)"
+                                           style="max-width: 180px;"
+                                           t-model="state.newColumnTitle"
+                                           t-on-keydown="(ev) => ev.key === 'Enter' &amp;&amp; this.addColumn(item.xpath)"/>
+                                    <button class="btn btn-xs btn-success"
+                                            t-att-disabled="state.saving"
+                                            t-on-click="() => this.addColumn(item.xpath)">
+                                        <i class="fa fa-check"/>
+                                    </button>
+                                    <button class="btn btn-xs btn-outline-secondary"
+                                            t-on-click="() => { this.state.addingColumnFor = null; }">
+                                        <i class="fa fa-times"/>
+                                    </button>
+                                </div>
+                            </t>
+                        </div>
+
+                        <!-- Column header -->
+                        <div t-if="item.kind === 'column_header'"
+                             class="studio-layout-item studio-layout-column"
+                             t-attf-style="padding-left: #{item.depth * 20}px">
+                            <i class="fa fa-columns text-info me-2"/>
+                            <!-- Normal view -->
+                            <t t-if="state.renamingColumnXpath !== item.xpath">
+                                <em t-esc="item.label || 'Untitled Column'"/>
+                                <span class="badge bg-light text-dark ms-2 small"
+                                      t-esc="item.fieldCount + ' field(s)'"/>
+                                <div class="ms-auto d-flex gap-1">
+                                    <button class="btn btn-xs btn-outline-secondary"
+                                            title="Rename this column"
+                                            t-att-disabled="state.saving"
+                                            t-on-click="() => { this.state.renamingColumnXpath = item.xpath; this.state.renamingColumnTitle = item.label || ''; }">
+                                        <i class="fa fa-pencil"/>
+                                    </button>
+                                    <button class="btn btn-xs btn-outline-danger"
+                                            title="Delete this column"
+                                            t-att-disabled="state.saving"
+                                            t-on-click="() => this.deleteColumn(item.xpath)">
+                                        <i class="fa fa-trash"/>
+                                    </button>
+                                </div>
+                            </t>
+                            <!-- Rename form -->
+                            <t t-if="state.renamingColumnXpath === item.xpath">
+                                <input type="text" class="form-control form-control-sm"
+                                       placeholder="Column title (leave blank for none)"
+                                       style="max-width: 180px;"
+                                       t-model="state.renamingColumnTitle"
+                                       t-on-keydown="(ev) => ev.key === 'Enter' &amp;&amp; this.renameColumn(item.xpath)"/>
+                                <button class="btn btn-xs btn-success ms-1"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="() => this.renameColumn(item.xpath)">
+                                    <i class="fa fa-check"/>
+                                </button>
+                                <button class="btn btn-xs btn-outline-secondary ms-1"
+                                        t-on-click="() => { this.state.renamingColumnXpath = null; }">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </t>
+                        </div>
+
+                        <!-- Notebook header -->
+                        <div t-if="item.kind === 'notebook_header'"
+                             class="studio-layout-item studio-layout-notebook"
+                             t-attf-style="padding-left: #{item.depth * 20}px">
+                            <i class="fa fa-book text-success me-2"/>
+                            <strong>Notebook</strong>
+                            <span class="badge bg-success ms-2 small"
+                                  t-esc="item.pageCount + ' tab(s)'"/>
+                        </div>
+
+                        <!-- Page / Tab header -->
+                        <div t-if="item.kind === 'page_header'"
+                             class="studio-layout-item studio-layout-page"
+                             t-attf-style="padding-left: #{item.depth * 20}px">
+                            <i class="fa fa-folder-o text-warning me-2"/>
+                            <!-- Rename mode -->
+                            <t t-if="state.renamingTabXpath === item.xpath">
+                                <input type="text" class="form-control form-control-sm"
+                                       placeholder="Tab title…"
+                                       style="max-width: 180px;"
+                                       t-model="state.renamingTabTitle"
+                                       t-on-keydown="(ev) => ev.key === 'Enter' &amp;&amp; this.renameTab(item.xpath)"/>
+                                <button class="btn btn-xs btn-success ms-1"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="() => this.renameTab(item.xpath)">
+                                    <i class="fa fa-check"/>
+                                </button>
+                                <button class="btn btn-xs btn-outline-secondary ms-1"
+                                        t-on-click="() => { this.state.renamingTabXpath = null; }">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </t>
+                            <!-- Normal mode -->
+                            <t t-if="state.renamingTabXpath !== item.xpath">
+                                <strong t-esc="item.label"/>
+                                <span t-if="item.invisible"
+                                      class="badge bg-warning text-dark ms-1 small">hidden</span>
+                                <button class="btn btn-xs btn-outline-secondary ms-auto"
+                                        title="Rename this tab"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="() => { this.state.renamingTabXpath = item.xpath; this.state.renamingTabTitle = item.label || ''; }">
+                                    <i class="fa fa-pencil"/>
+                                </button>
+                            </t>
+                        </div>
+
+                        <!-- Field row -->
+                        <div t-if="item.kind === 'field'"
+                             class="studio-layout-item studio-layout-field"
+                             t-attf-style="padding-left: #{item.depth * 20}px">
+                            <i t-attf-class="fa #{getFieldTypeIcon(item.type)} text-muted me-2"
+                               style="width:16px; text-align:center;"/>
+                            <span t-esc="item.string || item.name"/>
+                            <small class="text-muted ms-1" t-esc="item.name"/>
+                            <span t-if="item.name.startsWith('x_')"
+                                  class="badge bg-info text-dark ms-1 small">custom</span>
+                            <span class="badge bg-light text-muted ms-1 small"
+                                  t-esc="item.type"/>
+                            <!-- View-attr indicator badges -->
+                            <span t-if="item.view_attrs.required === '1'"
+                                  class="badge bg-danger ms-1 small" title="Required in this view">req</span>
+                            <span t-if="item.view_attrs.readonly === '1'"
+                                  class="badge bg-secondary ms-1 small" title="Readonly in this view">ro</span>
+                            <span t-if="item.view_attrs.string"
+                                  class="badge bg-primary ms-1 small"
+                                  t-attf-title="Label overridden to: #{item.view_attrs.string}">✐</span>
+                            <div class="ms-auto d-flex gap-1">
+                                <button class="btn btn-xs btn-link text-warning p-0"
+                                        title="Hide this field (keeps it on model, invisible)"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="() => this.toggleFieldVisibility(item.name, true)">
+                                    <i class="fa fa-eye-slash"/>
+                                </button>
+                                <button class="btn btn-xs btn-link text-danger p-0"
+                                        title="Remove from view"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="() => this.removeFieldFromView(item.name)">
+                                    <i class="fa fa-times"/>
+                                </button>
+                                <button t-attf-class="btn btn-xs btn-link p-0 #{state.expandedField === item.name ? 'text-primary' : 'text-muted'}"
+                                        title="Edit field properties (label, required, readonly, placeholder, help)"
+                                        t-on-click="() => this.toggleFieldExpand(item.name, item)">
+                                    <i class="fa fa-cog"/>
+                                </button>
+                            </div>
+                            <!-- Field properties expansion panel -->
+                            <div t-if="state.expandedField === item.name"
+                                 class="studio-field-props-panel">
+                                <div class="row g-2">
+                                    <div class="col-12 col-sm-6">
+                                        <label class="form-label small mb-1">
+                                            <i class="fa fa-tag me-1 text-primary"/>Label override
+                                        </label>
+                                        <input type="text" class="form-control form-control-sm"
+                                               t-att-placeholder="item.string"
+                                               t-model="state.fieldAttrs.string"/>
+                                        <div class="form-text">Leave blank to use default</div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <label class="form-label small mb-1">
+                                            <i class="fa fa-pencil-square-o me-1 text-info"/>Placeholder
+                                        </label>
+                                        <input type="text" class="form-control form-control-sm"
+                                               placeholder="e.g. Enter value here…"
+                                               t-model="state.fieldAttrs.placeholder"/>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small mb-1">
+                                            <i class="fa fa-question-circle me-1 text-warning"/>Help tooltip
+                                        </label>
+                                        <input type="text" class="form-control form-control-sm"
+                                               placeholder="Shown as ? tooltip next to the field"
+                                               t-model="state.fieldAttrs.help"/>
+                                    </div>
+                                    <div class="col-12 d-flex align-items-center gap-4 flex-wrap">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox"
+                                                   t-att-id="'fld_req_' + item.name"
+                                                   t-model="state.fieldAttrs.required"/>
+                                            <label class="form-check-label small fw-semibold text-danger"
+                                                   t-att-for="'fld_req_' + item.name">Required</label>
+                                        </div>
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox"
+                                                   t-att-id="'fld_ro_' + item.name"
+                                                   t-model="state.fieldAttrs.readonly"/>
+                                            <label class="form-check-label small fw-semibold text-secondary"
+                                                   t-att-for="'fld_ro_' + item.name">Read-only</label>
+                                        </div>
+                                        <div class="ms-auto d-flex gap-2">
+                                            <button class="btn btn-sm btn-primary"
+                                                    t-att-disabled="state.saving"
+                                                    t-on-click="() => this.updateFieldAttrs(item.name)">
+                                                <i class="fa fa-check me-1"/>Apply
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary"
+                                                    t-on-click="() => { this.state.expandedField = null; }">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add field button + inline picker -->
+                        <div t-if="item.kind === 'add_field_btn'"
+                             class="studio-layout-item studio-layout-add-btn"
+                             t-attf-style="padding-left: #{item.depth * 20}px">
+                            <button class="btn btn-sm btn-outline-primary"
+                                    t-att-disabled="state.saving"
+                                    t-on-click="() => this.openPicker(item.containerXpath, item.containerLabel)">
+                                <i class="fa fa-plus me-1"/>Add field here
+                            </button>
+
+                            <!-- Inline picker shown for this container -->
+                            <div t-if="state.pickerForXpath === item.containerXpath"
+                                 class="studio-inline-picker mt-2">
+                                <div class="picker-header d-flex align-items-center gap-2 mb-1">
+                                    <small class="text-muted fw-bold">
+                                        Add to: <t t-esc="item.containerLabel"/>
+                                    </small>
+                                    <button class="btn btn-xs btn-link text-danger ms-auto p-0"
+                                            t-on-click="closePicker">
+                                        <i class="fa fa-times"/>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control form-control-sm mb-1"
+                                       placeholder="Search fields…"
+                                       t-model="state.pickerSearch"/>
+                                <div class="picker-list">
+                                    <div t-if="pickerFields.length === 0"
+                                         class="text-muted small py-1 px-2">
+                                        No fields found.
+                                    </div>
+                                    <t t-foreach="pickerFields" t-as="pf" t-key="pf.name">
+                                        <div class="picker-item d-flex align-items-center gap-2 px-2 py-1"
+                                             t-att-disabled="state.saving"
+                                             t-on-click="() => this.addToContainer(pf.name)">
+                                            <i t-attf-class="fa #{getFieldTypeIcon(pf.type)} text-primary"
+                                               style="width:14px;text-align:center;"/>
+                                            <span t-esc="pf.string || pf.name"/>
+                                            <small class="text-muted ms-auto" t-esc="pf.name"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Section button -->
+                        <div t-if="item.kind === 'add_section_btn'"
+                             class="studio-layout-item studio-layout-action-btn"
+                             t-attf-style="padding-left: #{item.depth * 20}px">
+                            <div t-if="!state.addingSection">
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="() => { this.state.addingSection = true; }">
+                                    <i class="fa fa-plus-square me-1"/>Add Section
+                                </button>
+                            </div>
+                            <div t-if="state.addingSection"
+                                 class="d-flex align-items-center gap-2">
+                                <input type="text" class="form-control form-control-sm"
+                                       placeholder="Section title…"
+                                       style="max-width: 220px;"
+                                       t-model="state.newSectionTitle"
+                                       t-on-keydown="(ev) => ev.key === 'Enter' &amp;&amp; this.addSection()"/>
+                                <button class="btn btn-sm btn-success"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="addSection">
+                                    <i class="fa fa-check me-1"/>Create
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        t-on-click="() => { this.state.addingSection = false; this.state.newSectionTitle = ''; }">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Add Tab button -->
+                        <div t-if="item.kind === 'add_tab_btn'"
+                             class="studio-layout-item studio-layout-action-btn"
+                             t-attf-style="padding-left: #{item.depth * 20}px">
+                            <div t-if="!state.addingTab">
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="() => { this.state.addingTab = true; }">
+                                    <i class="fa fa-plus-square me-1"/>Add Tab
+                                </button>
+                            </div>
+                            <div t-if="state.addingTab"
+                                 class="d-flex align-items-center gap-2">
+                                <input type="text" class="form-control form-control-sm"
+                                       placeholder="Tab title…"
+                                       style="max-width: 220px;"
+                                       t-model="state.newTabTitle"
+                                       t-on-keydown="(ev) => ev.key === 'Enter' &amp;&amp; this.addTab()"/>
+                                <button class="btn btn-sm btn-success"
+                                        t-att-disabled="state.saving"
+                                        t-on-click="addTab">
+                                    <i class="fa fa-check me-1"/>Create
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        t-on-click="() => { this.state.addingTab = false; this.state.newTabTitle = ''; }">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </div>
+                        </div>
+
+                    </t>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- Tab: Create Field                                            -->
+                <!-- ============================================================ -->
+                <div t-if="!state.loading &amp;&amp; state.tab === 'create'"
+                     class="studio-create-form">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Field Label *</label>
+                            <input type="text" class="form-control"
+                                   placeholder="e.g. Custom Rating"
+                                   t-model="state.newFieldLabel"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                Technical Name *
+                                <small class="text-muted">(x_ prefix auto-added)</small>
+                            </label>
+                            <input type="text" class="form-control"
+                                   placeholder="e.g. custom_rating"
+                                   t-model="state.newFieldName"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Field Type</label>
+                            <select class="form-select" t-model="state.newFieldType">
+                                <t t-foreach="fieldTypes" t-as="ft" t-key="ft.value">
+                                    <option t-att-value="ft.value" t-esc="ft.label"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col-md-6"
+                             t-if="state.newFieldType === 'selection'">
+                            <label class="form-label fw-bold">
+                                Dropdown Options
+                                <small class="text-muted">(value,Label per line)</small>
+                            </label>
+                            <textarea class="form-control" rows="3"
+                                      placeholder="draft,Draft&#10;done,Done"
+                                      t-model="state.newSelectionOptions"/>
+                        </div>
+                        <div class="col-md-6"
+                             t-if="state.newFieldType === 'many2one' || state.newFieldType === 'many2many'">
+                            <label class="form-label fw-bold">Related Model</label>
+                            <input type="text" class="form-control"
+                                   placeholder="e.g. res.partner"
+                                   t-model="state.newRelationModel"/>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <button class="btn btn-primary"
+                                    t-att-disabled="state.saving"
+                                    t-on-click="createAndAddField">
+                                <i class="fa fa-plus me-1"/>
+                                Create &amp; Add to View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saving overlay -->
+                <div t-if="state.saving"
+                     class="studio-saving-overlay">
+                    <i class="fa fa-spinner fa-spin fa-lg"/>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

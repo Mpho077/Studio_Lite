@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_studio_customization_user,studio.customization user,model_studio_customization,group_studio_user,1,0,0,0
+access_studio_customization_manager,studio.customization manager,model_studio_customization,group_studio_manager,1,1,1,1
+access_studio_field_creator,studio.field.creator,model_studio_field_creator,group_studio_user,1,1,1,1
+access_studio_field_visibility,studio.field.visibility,model_studio_field_visibility,group_studio_user,1,1,1,1
+access_studio_field_inserter,studio.field.inserter,model_studio_field_inserter,group_studio_user,1,1,1,1
+access_studio_field_properties,studio.field.properties,model_studio_field_properties,group_studio_user,1,1,1,1
+access_studio_export,studio.export,model_studio_export,group_studio_manager,1,1,1,1

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_studio_field_properties_form" model="ir.ui.view">
+        <field name="name">studio.field.properties.form</field>
+        <field name="model">studio.field.properties</field>
+        <field name="arch" type="xml">
+            <form string="Field Properties">
+                <sheet>
+                    <div class="oe_title mb-3">
+                        <h2>Change field display properties</h2>
+                    </div>
+                    <group>
+                        <group string="Target">
+                            <field name="model_id" placeholder="e.g. Sale Order"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="view_id"/>
+                            <field name="target_field"
+                                   placeholder="e.g. partner_id, date_order"/>
+                        </group>
+                    </group>
+
+                    <group string="Properties to Change">
+                        <group>
+                            <field name="change_string"/>
+                            <field name="new_string"
+                                   invisible="not change_string"
+                                   required="change_string"
+                                   placeholder="New label text"/>
+                        </group>
+                        <group>
+                            <field name="change_required"/>
+                            <field name="new_required"
+                                   invisible="not change_required"/>
+                        </group>
+                        <group>
+                            <field name="change_readonly"/>
+                            <field name="new_readonly"
+                                   invisible="not change_readonly"/>
+                        </group>
+                        <group>
+                            <field name="change_widget"/>
+                            <field name="new_widget"
+                                   invisible="not change_widget"
+                                   required="change_widget"
+                                   placeholder="e.g. radio, image, statusbar"/>
+                        </group>
+                        <group>
+                            <field name="change_placeholder"/>
+                            <field name="new_placeholder"
+                                   invisible="not change_placeholder"
+                                   required="change_placeholder"
+                                   placeholder="e.g. Enter value…"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply_properties" type="object"
+                            string="Apply Changes" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_field_properties" model="ir.actions.act_window">
+        <field name="name">Field Properties</field>
+        <field name="res_model">studio.field.properties</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

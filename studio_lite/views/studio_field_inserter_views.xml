@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_studio_field_inserter_form" model="ir.ui.view">
+        <field name="name">studio.field.inserter.form</field>
+        <field name="model">studio.field.inserter</field>
+        <field name="arch" type="xml">
+            <form string="Insert Field in View">
+                <sheet>
+                    <div class="oe_title mb-3">
+                        <h2>Insert a field into a view</h2>
+                    </div>
+                    <group>
+                        <group string="Target">
+                            <field name="model_id" placeholder="e.g. Sale Order"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="view_type"/>
+                            <field name="view_id"/>
+                        </group>
+                        <group string="Field">
+                            <field name="field_id" placeholder="Select a field…"/>
+                        </group>
+                    </group>
+                    <group string="Position">
+                        <group>
+                            <field name="position"/>
+                        </group>
+                        <group>
+                            <field name="reference_field"
+                                   invisible="position not in ('after', 'before')"
+                                   placeholder="e.g. partner_id"
+                                   required="position in ('after', 'before')"/>
+                            <field name="page_title"
+                                   invisible="position != 'notebook_page'"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_insert_field" type="object"
+                            string="Insert Field" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_field_inserter" model="ir.actions.act_window">
+        <field name="name">Insert Field in View</field>
+        <field name="res_model">studio.field.inserter</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_studio_field_creator_form" model="ir.ui.view">
+        <field name="name">studio.field.creator.form</field>
+        <field name="model">studio.field.creator</field>
+        <field name="arch" type="xml">
+            <form string="Create Custom Field">
+                <sheet>
+                    <div class="oe_title mb-3">
+                        <h2>Create a new field on any model</h2>
+                    </div>
+                    <group>
+                        <group string="Target Model">
+                            <field name="model_id" placeholder="e.g. Sale Order, Contact…"/>
+                            <field name="model_name" invisible="1"/>
+                        </group>
+                        <group string="Field Definition">
+                            <field name="field_name" placeholder="e.g. custom_rating"/>
+                            <field name="field_description" placeholder="e.g. Custom Rating"/>
+                            <field name="field_type"/>
+                        </group>
+                    </group>
+
+                    <group string="Dropdown Options"
+                           invisible="field_type != 'selection'">
+                        <field name="selection_options" nolabel="1" colspan="2"
+                               placeholder="draft,Draft&#10;confirmed,Confirmed&#10;done,Done"/>
+                    </group>
+
+                    <group string="Related Model"
+                           invisible="field_type not in ('many2one', 'many2many')">
+                        <field name="relation_model_id"
+                               placeholder="e.g. Product, Contact…"/>
+                    </group>
+
+                    <group string="Properties">
+                        <group>
+                            <field name="is_required"/>
+                            <field name="is_index"/>
+                        </group>
+                        <group>
+                            <field name="help_text" placeholder="Tooltip shown to users"/>
+                        </group>
+                    </group>
+
+                    <group string="Add to View">
+                        <group>
+                            <field name="add_to_form"/>
+                        </group>
+                        <group invisible="not add_to_form">
+                            <field name="target_view_id"/>
+                            <field name="insert_after_field"
+                                   placeholder="e.g. partner_id (leave blank for end)"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_create_field" type="object"
+                            string="Create Field" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_field_creator" model="ir.actions.act_window">
+        <field name="name">Create Custom Field</field>
+        <field name="res_model">studio.field.creator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

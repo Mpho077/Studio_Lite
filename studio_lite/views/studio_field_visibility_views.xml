@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_studio_field_visibility_form" model="ir.ui.view">
+        <field name="name">studio.field.visibility.form</field>
+        <field name="model">studio.field.visibility</field>
+        <field name="arch" type="xml">
+            <form string="Hide Fields">
+                <sheet>
+                    <div class="oe_title mb-3">
+                        <h2>Hide fields on a view</h2>
+                    </div>
+                    <group>
+                        <group string="Target">
+                            <field name="model_id" placeholder="e.g. Sale Order"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="view_type"/>
+                            <field name="view_id"/>
+                        </group>
+                        <group string="Fields to Hide">
+                            <field name="field_ids" widget="many2many_tags" nolabel="1"
+                                   colspan="2"
+                                   placeholder="Select fields to hide…"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_hide_fields" type="object"
+                            string="Hide Fields" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_field_visibility" model="ir.actions.act_window">
+        <field name="name">Hide Fields</field>
+        <field name="res_model">studio.field.visibility</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

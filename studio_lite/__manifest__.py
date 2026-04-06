@@ -1,0 +1,41 @@
+{
+    'name': 'Studio Lite',
+    'version': '19.0.1.0.0',
+    'category': 'Customizations',
+    'sequence': 5,
+    'summary': 'Customize Odoo without code — add fields, tweak views, and export deployable modules. Community Edition.',
+    'description': '',       # App Store reads static/description/index.html
+    'author': 'Leeno Consult',
+    'website': 'https://leenoconsult.com',
+    'support': 'support@leenconsult.com',
+    'price': 55.00,
+    'currency': 'USD',
+    'images': [
+        'static/description/banner.png',
+    ],
+    'license': 'OPL-1',
+    'depends': ['base', 'web'],
+    'data': [
+        'security/studio_security.xml',
+        'security/ir.model.access.csv',
+        'views/studio_customization_views.xml',
+        'views/studio_field_creator_views.xml',
+        'views/studio_field_visibility_views.xml',
+        'views/studio_field_inserter_views.xml',
+        'views/studio_field_properties_views.xml',
+        'views/studio_export_views.xml',
+        'views/studio_model_explorer_views.xml',
+        'views/menus.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'studio_lite/static/src/css/studio_lite.css',
+            'studio_lite/static/src/systray/systray.js',
+            'studio_lite/static/src/design_panel/design_panel.js',
+            'studio_lite/static/src/xml/studio_templates.xml',
+        ],
+    },
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}
