@@ -11,7 +11,7 @@
     'price': 55.00,
     'currency': 'USD',
     'images': [
-        'static/description/banner.png',
+        'static/description/hero.png',
     ],
     'license': 'OPL-1',
     'depends': ['base', 'web'],

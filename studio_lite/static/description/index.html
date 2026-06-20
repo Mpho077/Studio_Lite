@@ -1,71 +1,38 @@
 <!-- Studio Lite — Odoo App Store listing page -->
+<!-- NOTE: the Odoo App Store sanitises HTML and often strips section background
+     colours/gradients. So the hero is a baked-in IMAGE (hero.png) and ALL real
+     text below uses dark colours that stay legible on a white background. -->
 
-<!-- ============================ HERO ============================ -->
-<section class="oe_container" style="background:linear-gradient(135deg,#7C2D00 0%,#C2410C 45%,#EA580C 100%);padding:56px 0 48px;">
-    <div class="oe_row oe_spaced" style="text-align:center;">
-        <div class="oe_span12">
-            <img src="icon.png" alt="Studio Lite"
-                 style="width:104px;height:104px;border-radius:22%;margin-bottom:20px;
-                        box-shadow:0 8px 32px rgba(0,0,0,0.45);" />
-            <h1 style="color:#ffffff;font-size:2.6em;font-weight:800;margin:0 0 10px;letter-spacing:-0.5px;">
-                Studio Lite
-            </h1>
-            <h2 style="color:#FED7AA;font-size:1.25em;font-weight:400;margin:0 0 22px;">
-                Customise Odoo without writing a single line of code &mdash; on Community Edition
-            </h2>
-            <p style="color:#FFEDD5;font-size:1.05em;max-width:680px;margin:0 auto 28px;line-height:1.7;">
-                A lightweight, no-subscription alternative to Odoo Studio. Add fields, adjust views,
-                hide clutter, change properties &mdash; then <strong>export everything as a clean,
-                installable module</strong>. All from a friendly UI inside your Odoo backend.
-            </p>
-            <div style="margin-top:6px;">
-                <span style="display:inline-block;background:#ffffff;color:#C2410C;font-weight:700;
-                             padding:9px 22px;border-radius:24px;font-size:1.05em;margin:4px;">
-                    One-time purchase &mdash; no subscription
-                </span>
-                <span style="display:inline-block;background:rgba(255,255,255,0.15);color:#ffffff;border:1px solid rgba(255,255,255,0.4);
-                             padding:9px 22px;border-radius:24px;font-size:1.05em;margin:4px;">
-                    Works on Odoo 19 Community
-                </span>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===================== QUICK VALUE BAR ======================= -->
-<section class="oe_container" style="background:#1F2937;padding:22px 0;">
-    <div class="oe_row oe_spaced" style="text-align:center;">
-        <div class="oe_span3" style="padding:8px;">
-            <div style="color:#FB923C;font-size:1.7em;font-weight:800;">No&nbsp;Code</div>
-            <div style="color:#D1D5DB;font-size:0.95em;">Point-and-click wizards</div>
-        </div>
-        <div class="oe_span3" style="padding:8px;">
-            <div style="color:#FB923C;font-size:1.7em;font-weight:800;">1-Click</div>
-            <div style="color:#D1D5DB;font-size:0.95em;">Revert any change</div>
-        </div>
-        <div class="oe_span3" style="padding:8px;">
-            <div style="color:#FB923C;font-size:1.7em;font-weight:800;">Export</div>
-            <div style="color:#D1D5DB;font-size:0.95em;">Deployable ZIP module</div>
-        </div>
-        <div class="oe_span3" style="padding:8px;">
-            <div style="color:#FB923C;font-size:1.7em;font-weight:800;">Community</div>
-            <div style="color:#D1D5DB;font-size:0.95em;">No Enterprise needed</div>
-        </div>
-    </div>
-</section>
-
-<!-- ========================== BANNER ========================== -->
-<section class="oe_container" style="padding:0;margin-bottom:0;">
+<!-- ============================ HERO (image) ============================ -->
+<section class="oe_container" style="padding:0;">
     <div class="oe_row">
         <div class="oe_span12" style="text-align:center;">
-            <img src="banner.png" alt="Studio Lite banner"
-                 style="width:100%;max-width:1200px;display:block;margin:0 auto;" />
+            <img src="hero.png" alt="Studio Lite — customise Odoo without code"
+                 style="width:100%;max-width:1200px;display:block;margin:0 auto;border-radius:6px;" />
+        </div>
+    </div>
+</section>
+
+<!-- ===================== SEE IT IN ACTION (GIF) ======================= -->
+<section class="oe_container" style="padding:44px 0 24px;">
+    <div class="oe_row oe_spaced" style="text-align:center;">
+        <div class="oe_span12">
+            <h3 style="color:#C2410C;font-size:1.7em;font-weight:800;margin-bottom:6px;">
+                Add a custom field in seconds
+            </h3>
+            <p style="color:#4B5563;font-size:1.08em;max-width:680px;margin:0 auto 22px;line-height:1.7;">
+                No code, no XML, no developer. Pick a model, name your field, choose a type, and click
+                <strong style="color:#9A3412;">Create Field</strong>. That's it &mdash; watch it happen:
+            </p>
+            <img src="add_field.gif" alt="Adding a custom field with Studio Lite"
+                 style="width:100%;max-width:880px;display:block;margin:0 auto;
+                        border:1px solid #FED7AA;border-radius:10px;box-shadow:0 8px 30px rgba(124,45,0,0.18);" />
         </div>
     </div>
 </section>
 
 <!-- ========================= OVERVIEW ========================= -->
-<section class="oe_container" style="padding:48px 0 32px;">
+<section class="oe_container" style="padding:36px 0 32px;">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
             <h3 style="color:#C2410C;font-size:1.6em;font-weight:700;border-bottom:2px solid #FED7AA;padding-bottom:10px;">
@@ -82,6 +49,36 @@
                 <strong>Export as Module</strong> and download a clean, version-controlled ZIP
                 that installs on any Odoo 19 server.
             </p>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== KEY BENEFITS (text cards) =================== -->
+<section class="oe_container" style="padding:8px 0 24px;">
+    <div class="oe_row oe_spaced" style="text-align:center;">
+        <div class="oe_span3" style="padding:14px;">
+            <div style="border:1px solid #FED7AA;border-radius:10px;padding:18px 10px;">
+                <div style="color:#C2410C;font-size:1.5em;font-weight:800;">No Code</div>
+                <div style="color:#4B5563;font-size:0.95em;margin-top:4px;">Point-and-click wizards</div>
+            </div>
+        </div>
+        <div class="oe_span3" style="padding:14px;">
+            <div style="border:1px solid #FED7AA;border-radius:10px;padding:18px 10px;">
+                <div style="color:#C2410C;font-size:1.5em;font-weight:800;">1-Click Revert</div>
+                <div style="color:#4B5563;font-size:0.95em;margin-top:4px;">Undo any change safely</div>
+            </div>
+        </div>
+        <div class="oe_span3" style="padding:14px;">
+            <div style="border:1px solid #FED7AA;border-radius:10px;padding:18px 10px;">
+                <div style="color:#C2410C;font-size:1.5em;font-weight:800;">Export</div>
+                <div style="color:#4B5563;font-size:0.95em;margin-top:4px;">Deployable ZIP module</div>
+            </div>
+        </div>
+        <div class="oe_span3" style="padding:14px;">
+            <div style="border:1px solid #FED7AA;border-radius:10px;padding:18px 10px;">
+                <div style="color:#C2410C;font-size:1.5em;font-weight:800;">Community</div>
+                <div style="color:#4B5563;font-size:0.95em;margin-top:4px;">No Enterprise needed</div>
+            </div>
         </div>
     </div>
 </section>
@@ -313,7 +310,7 @@
 <section class="oe_container" style="padding:36px 0 24px;text-align:center;">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
-            <span style="display:inline-block;background:#FED7AA;color:#7C2D00;
+            <span style="display:inline-block;background:#FFF7ED;color:#7C2D00;border:1px solid #FED7AA;
                          padding:7px 20px;border-radius:20px;font-weight:600;font-size:0.98em;">
                 Compatible with Odoo 19.0 Community &amp; Enterprise
             </span>
