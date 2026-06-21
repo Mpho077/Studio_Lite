@@ -1,13 +1,13 @@
 {
     'name': 'Studio Lite',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.2',
     'category': 'Customizations',
     'sequence': 5,
     'summary': 'Customize Odoo without code — add fields, tweak views, and export deployable modules. Community Edition.',
     'description': '',       # App Store reads static/description/index.html
     'author': 'Leeno Consult',
     'website': 'https://leenoconsult.com',
-    'support': 'support@leenconsult.com',
+    'support': 'support@leenoconsult.com',
     'price': 55.00,
     'currency': 'USD',
     'images': [
